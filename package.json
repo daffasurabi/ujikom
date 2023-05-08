@@ -1,0 +1,16 @@
+{
+  "name": "projek",
+  "version": "1.0.0",
+  "description": "",
+  "main": "signature.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "html5-qrcode": "^2.3.8",
+    "qrcode": "^1.5.1"
+  }
+}
