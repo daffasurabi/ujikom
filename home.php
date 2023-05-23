@@ -1,3 +1,6 @@
+<?php
+error_reporting(0);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +13,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" href="./aset/home.css">
     <script src="./node_modules/html5-qrcode/html5-qrcode.min.js"></script>
-    <link href="sytle.css" rel="stylesheet">
+    <script src="sytle.js"></script>
+    <link href="sytlee.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    
     <title>Document</title>
 </head>
 <body>
@@ -20,6 +26,7 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item active">
@@ -28,14 +35,17 @@
     <li class="nav-item active">
         <a class="nav-link" href="qr.php">pembuat qr <span class="sr-only"></span></a>
     </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="data.php">data absen <span class="sr-only"></span></a>
+    </li>
       </ul>
   </div>
 </nav>
-<form action="insert.php" method="post" > 
+
+<form action="" method="POST" enctype="multipart/form-data" >
+
     <fieldset >
     <div  align="center">
-        absensi karyawan
-        <hr>
         <div>
             <?php
             function hari_ini(){
@@ -87,22 +97,16 @@
             <?php
             echo "Hari ini adalah "  . hari_ini();
             ?>
-             
-        jam
-        <p id="clock" name="clock"></p>
-                    <script>
-                       setInterval(customClock, 500);
-                       function customClock() {
-                           var time = new Date();
-                           var hrs = time.getHours();
-                           var min = time.getMinutes();
-                           var sec = time.getSeconds();
-                           
-                           document.getElementById('clock').innerHTML = hrs + ":" + min + ":" + sec;
-                           
-                       }
-                       
-                    </script>
+        <div class="jam-digital">
+        <div id="jam"></div>
+            <div id="unit">
+             <span>Jam</span>
+             <span>Menit</span>
+            <span>Detik</span>
+        </div>
+        </div>
+
+      
                     <?php
                     echo  date('d-m-Y');
                     ?>
@@ -133,8 +137,135 @@
     <div id="reader"></div>
     <div id="result"></div>
 </main>
+<?php
+if (isset($_POST['cokot'])) {
     
+    echo '<script>
+    ambilGambar();
+    </script>';
+  
+}
+if (isset($_POST['upload'])) {
+    include "koneksi.php";
+    $direk = "berkas/";
+    $file_name=$_FILES['foto']['name'];
+    move_uploaded_file($_FILES["foto"]['tmp_name'],$direk.$file_name);
+    $result = $_POST['result'];
+    $hari = $_POST['hari_ini'];
+    $SQL = "INSERT INTO `waktu`(`id`,`namafile`, `username`, `hari`,`tanggal`) VALUES ('','$file_name','$result','$hari',NOW() )";
+    $hasil = mysqli_query($koneksi,$SQL);
+    header('location:data.php');
+    
+   
+  
+}
+?>
+<div class="kamera">
+<p>Device saat ini: <span id="dsi"></span></p>
+		<video id="webcamVideo" width="720" height="480" style="border: 1px black solid;" autoplay></video>
+		<canvas id="webcamCanvas" width="720" height="480" style="border: 1px black solid; display: none;"></canvas>
+		
 
+        
+		<br>
+		
+		<!-- <button onclick="startCamera();" name="start" values="mulai" >Mulai Kamera</button> -->
+		<button onclick="gantiKamera();">Ganti Kamera</button>
+		<button onclick="ambilGambar();"name="cokot" >Ambil Gambar</button>
+		<button onclick="gantiModeKamera()">Ganti Mode Kamera</button>
+		
+		<script>
+			
+			var infourl = new URLSearchParams(window.location.search);
+			
+			var devicesaya = [];
+			var devicesaatini = 0;
+			
+			var fm = "user";
+			
+			if(infourl.get("modekamera") == "belakang"){
+				fm = { "exact" : "environment" };
+			}
+			
+			var wVideo = document.querySelector("#webcamVideo");
+			var wCanvas = document.querySelector("#webcamCanvas");
+			
+			
+			
+			//nge list device-device video
+			navigator.mediaDevices.enumerateDevices().then(function(devices){
+				devices.forEach(function(device){
+					if(device.kind == "videoinput"){
+						devicesaya.push({
+							"id" : device.deviceId,
+							"label" : device.label,
+						});
+					}
+				});
+			});
+			
+			setTimeout(function(){
+				$("#dsi").html(devicesaya[devicesaatini].label);
+			},1000);
+			
+			
+			async function startCamera(){
+				var stream = null;
+				try{
+					
+					stream = await navigator.mediaDevices.getUserMedia({ video : { 
+						deviceId : devicesaya[devicesaatini].id, 
+						facingMode : fm ,
+					}, audio : false });
+					
+					
+				}catch(error){
+					//console.log(error);
+					//alert("Perangkat ini tidak dilengkapi kamera belakang.");
+				}
+				
+				wVideo.srcObject = stream;
+			}
+			
+			function ambilGambar(){
+				wCanvas.getContext("2d").drawImage(wVideo, 0, 0, 720, 480);
+				var imageData = wCanvas.toDataURL("image/jpg");
+				//console.log(imageData);
+				
+				$.post("gambar.php",{
+					'imagedata' : imageData
+				}, function(data){
+					console.log(data);
+				})
+				
+			}
+			
+			function gantiModeKamera(){
+				if(infourl.get("modekamera") == "belakang"){
+					location.href = location.href.split('?')[0];
+				}else{
+					location.href = location.href + "?modekamera=belakang";
+				}
+			}
+			
+			function toggleCanvasVideo(){
+				$("#webcamVideo").toggle();
+				$("#webcamCanvas").toggle();
+			}
+			
+			function gantiKamera(){
+				if(devicesaatini < devicesaya.length-1)
+					devicesaatini++;
+				else
+					devicesaatini = 0
+				
+				$("#dsi").html(devicesaya[devicesaatini].label);
+				startCamera();
+			}
+			
+		</script>
+
+</div>
 <script>
 
     const scanner = new Html5QrcodeScanner('reader', { 
@@ -149,16 +280,13 @@
 
     scanner.render(success, error);
     // Starts scanner
-
     function success(result) {
 
         document.getElementById('result').innerHTML = `
         <h2>Success absen</h2>
         <hr>
         <input type="hidden" value="${result}" name="result">
-        <p>"${result}"<p>
-
-        `;
+        <p>"${result}"<p>`;
       
         // Prints result as a link inside result element
       
@@ -168,6 +296,7 @@
 
         document.getElementById('reader').remove();
         // Removes reader element from DOM since no longer needed
+      startCamera();
     
     }
 
@@ -175,9 +304,16 @@
         console.error(err);
         // Prints any errors to the console
     }
-
+  
 </script>
-<button type="submit">kirim</button>
+
+    
+<script>
+	
+			
+</script>
+<input type="file" name="foto">
+<input type="submit" name="upload" value="Upload">
 </form>
 </body>
 </html>

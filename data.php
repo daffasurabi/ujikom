@@ -4,22 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./aset/data.css">
+    <link rel="stylesheet" href="./aset/data3.css">
     <title>Document</title>
 </head>
 <body>
     <div class="filter">
 
     </div>
-    <?php
-    include 'koneksi.php';
-    if(isset($_POST['filter'])){
-        $mulai = $_POST['mulai'];
-        $akhir = $_POST['akhir'];
-        echo "dari tanggal".$mulai."sampai tanggal".$akhir;
-
-    }
-    ?>
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
     <table>
         <tr>
         <div class="row mt-4">
@@ -32,12 +24,28 @@
             <td>
                 <input type="date" name="akhir" class="form-control">
             </td>
-            <td colspan="2">   
+            <td>
                 <button type="submit" name="filter" class="btn btn-info">cari</button>
+            </td>
+            <td>
+            <button onclick="location.reload()">Refresh</button>
             </td>
             </form>
 
         </div>
+        <tr >
+                <td colspan="4">
+                <?php
+    include 'koneksi.php';
+    if(isset($_POST['filter'])){
+        $mulai = $_POST['mulai'];
+        $akhir = $_POST['akhir'];
+        echo "dari tanggal"."  <b>".$mulai."</b>  "."sampai tanggal"." <b>".$akhir."</b> ";
+
+    }
+    ?>
+                </td>
+        </tr>
 
     </div>
     <?php
@@ -54,7 +62,7 @@
     ?>
         </tr>
         <tr>
-            <th>id</th>
+            <th>foto</th>
             <th>username</th>
             <th>hari</th>
             <th>waktu</th>
@@ -67,14 +75,22 @@
                         
                         ?>
                         <tr>
-                        <td><?php echo $no['id']?></td>
+                        <?php
+                        echo"<td><img src ='berkas/". $no ['namafile']."'width='75' height='75'></td>";
+                        ?>
                         <td><?php echo $no['username']?></td>
                         <td><?php echo $no['hari']?></td>
                         <td><?php echo $no['tanggal']?></td>
                 <?php
                     }
                 ?>
+                <tr>
+                    <td colspan="4" align="center">
+                        <a href="home.php">home</a>
+                    </td>
+                </tr>
     </table>
+                </div>
     
 </body>
 </html>

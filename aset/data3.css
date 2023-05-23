@@ -14,6 +14,7 @@
 background: linear-gradient(0deg, #ccff7e 0%, #94ffce 100%);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e94ca1",endColorstr="#c74ae9",GradientType=1);
 opacity: .7;
+
 }
 table{
  position: absolute;
@@ -25,11 +26,27 @@ table{
  height: 300px;
  border-collapse: collapse;
  border-spacing: 0;
- box-shadow: 0 2px 15px rgba(36, 35, 35, 0.7);
  border-radius: 12px 12px 0 0;
- overflow-y: auto;
-
+ display: block;
+ 
 }
+.my-custom-scrollbar {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 60%; 
+    height: 300px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    box-shadow: 0 2px 15px rgba(36, 35, 35, 0.7);
+    border-radius: 12px 12px 0 0;
+    overflow-y: auto;
+    height: 400px;
+    overflow: auto;
+    }
+    
 td , th{
  padding: 15px 20px;
  text-align: center;
