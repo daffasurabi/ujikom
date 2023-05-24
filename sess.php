@@ -15,7 +15,7 @@ if($count > 0){
     }else if($level == '2'){
         $_SESSION['gmail'] = $gmail;
         $_SESSION['level'] = $level;
-        header('location:data.php');
+        header('location:user.php');
     }
 }else{
     echo "Username dan Password yang Anda masukan salah. <br>";
