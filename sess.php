@@ -19,7 +19,7 @@ if($count > 0){
     }
 }else{
     echo "Username dan Password yang Anda masukan salah. <br>";
-    echo "<a href='index.html'>Kembali</a>";
+    echo "<a href='index.php'>Kembali</a>";
 }
 ?>
 

@@ -8,6 +8,9 @@
     <title>Document</title>
 </head>
 <body>
+    <?php
+    session_start();
+    ?>
     <div class="filter">
 
     </div>
@@ -84,6 +87,11 @@
                 <?php
                     }
                 ?>
+                 <tr>
+                    <td colspan="4" align="center">
+                        <a href="logout.php">logout</a>
+                    </td>
+                </tr>
     </table>
                 </div>
     
