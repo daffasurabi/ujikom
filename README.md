@@ -14,3 +14,11 @@ Aplikasi kehadiran karyawan ini di buat oleh bahasa pemograman html,php,nodejs, 
 - Memiliki Webcam
   - menyimpan hasil foto di perangat
 - Upload foto
+
+## cara pemasangan
+- ekstra file
+- impor database yang terdapat pada folder database yang bernama "luthfi.sql"
+
+## akun admin default
+- gmail    : ezi@gmail.com
+- password :123
